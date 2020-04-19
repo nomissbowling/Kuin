@@ -442,7 +442,7 @@ EXPORT void* _copy(const void* me_, const U8* type)
 
 EXPORT void* _toBin(const void* me_, const U8* type)
 {
-	if (IsRef(*type) && me_ == NULL)
+	if (IsRef(*type) && me_ == NULL || *type == TypeId_Func)
 	{
 		U8* result = (U8*)AllocMem(0x10 + 0x08);
 		((S64*)result)[0] = DefaultRefCntOpe;
@@ -589,14 +589,6 @@ EXPORT void* _toBin(const void* me_, const U8* type)
 						ToBinDictRecursion(&ptr, *(void**)((U8*)me_ + 0x10), child1, child2);
 					return CatBin((int)len * 3, bins);
 				}
-			}
-		case TypeId_Func:
-			{
-				U8* result = (U8*)AllocMem(0x10 + 0x08);
-				((S64*)result)[0] = DefaultRefCntOpe;
-				((S64*)result)[1] = 0x08;
-				*(S64*)(result + 0x10) = 0;
-				return result;
 			}
 		case TypeId_Enum:
 			{
