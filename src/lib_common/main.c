@@ -20,12 +20,12 @@ typedef enum ETypeId
 	TypeId_Bit64 = 0x07,
 	TypeId_Func = 0x08,
 	TypeId_Enum = 0x09,
-	TypeId_Array = 0x80,
-	TypeId_List = 0x81,
-	TypeId_Stack = 0x82,
-	TypeId_Queue = 0x83,
-	TypeId_Dict = 0x84,
-	TypeId_Class = 0x85,
+	TypeId_Array = 0x81,
+	TypeId_List = 0x82,
+	TypeId_Stack = 0x83,
+	TypeId_Queue = 0x84,
+	TypeId_Dict = 0x85,
+	TypeId_Class = 0x86,
 } ETypeId;
 
 typedef struct SBinList
@@ -2130,13 +2130,12 @@ EXPORT void _addQueue(void* me_, const U8* type, const void* item)
 	(*(S64*)((U8*)me_ + 0x08))++;
 }
 
-EXPORT void _addDict(void* me_, const U8* type, const U8* value_type, const void* key, const void* item)
+EXPORT void _addDict(void* me_, const U8* type, const void* key, const void* item)
 {
 	THROWDBG(me_ == NULL, EXCPT_ACCESS_VIOLATION);
 	Bool addition;
 	U8* child1;
 	U8* child2;
-	UNUSED(value_type);
 	GetDictTypes(type, &child1, &child2);
 	THROWDBG(IsRef(*child1) && key == NULL, EXCPT_ACCESS_VIOLATION); // 'key' must not be 'null'.
 	*(void**)((U8*)me_ + 0x10) = AddDictRecursion(*(void**)((U8*)me_ + 0x10), key, item, GetCmpFunc(child1), child1, child2, &addition);
@@ -2605,6 +2604,7 @@ EXPORT S64 _idx(void* me_, const U8* type)
 
 EXPORT SClass* _getPtr(void* me_, const U8* type, SClass* me2)
 {
+	UNUSED(type);
 	SListPtr* ptr = (SListPtr*)me2;
 	ptr->Ptr = *(void**)((U8*)me_ + 0x20);
 	return me2;
@@ -2612,8 +2612,17 @@ EXPORT SClass* _getPtr(void* me_, const U8* type, SClass* me2)
 
 EXPORT void _setPtr(void* me_, const U8* type, SClass* ptr)
 {
+	UNUSED(type);
 	SListPtr* ptr2 = (SListPtr*)ptr;
 	*(void**)((U8*)me_ + 0x20) = ptr2->Ptr;
+}
+
+EXPORT U8* _dictValueType(const U8* type)
+{
+	U8* child1;
+	U8* child2;
+	GetDictTypes(type, &child1, &child2);
+	return child2;
 }
 
 static Bool IsRef(U8 type)

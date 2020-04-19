@@ -72,7 +72,7 @@ EXPORT S64 _findStrEx(const U8* me_, const U8* pattern, S64 start, Bool fromLast
 EXPORT void _addList(void* me_, const U8* type, const void* item);
 EXPORT void _addStack(void* me_, const U8* type, const void* item);
 EXPORT void _addQueue(void* me_, const U8* type, const void* item);
-EXPORT void _addDict(void* me_, const U8* type, const U8* value_type, const void* key, const void* item);
+EXPORT void _addDict(void* me_, const U8* type, const void* key, const void* item);
 EXPORT void* _getList(void* me_, const U8* type);
 EXPORT void* _getStack(void* me_, const U8* type);
 EXPORT void* _getQueue(void* me_, const U8* type);
@@ -98,6 +98,7 @@ EXPORT void _delDict(void* me_, const U8* type, const void* key);
 EXPORT S64 _idx(void* me_, const U8* type);
 EXPORT SClass* _getPtr(void* me_, const U8* type, SClass* me2);
 EXPORT void _setPtr(void* me_, const U8* type, SClass* ptr);
+EXPORT U8* _dictValueType(const U8* type);
 
 // Assembly functions.
 void* ToBinClassAsm(const void* me_);
